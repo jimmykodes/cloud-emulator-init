@@ -31,12 +31,12 @@ cloud-emulator-init
 ### Docker
 
 ```shell
-docker pull jimmykodes/cloud-emulator-init:latest
+docker pull jameskeith92/cloud-emulator-init:latest
 
 docker run \
   -v ${PWD}/conf.yaml:/etc/cloud-emulator-init/conf.yaml \
   -e CONFIG_FILE=/etc/cloud-emulator-init/conf.yaml \
-  jimmykodes/cloud-emulator-init
+  jameskeith92/cloud-emulator-init
 ```
 
 ## Supported Emulators
