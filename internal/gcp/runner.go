@@ -53,15 +53,20 @@ func RunE(ctx context.Context, config *Config) error {
 						atomicErr.Append(err)
 						return
 					}
-					log.Println("topic already exists, skipping")
-					return
+					log.Printf("topic %s already exists", topic.Name)
+					t = client.Topic(topic.Name)
 				}
 				log.Println("created topic:", t.String())
 				for _, subscription := range topic.Subscriptions {
 					sub, err := client.CreateSubscription(ctx, subscription, pubsub.SubscriptionConfig{Topic: t})
 					if err != nil {
-						log.Println("error creating subscription", subscription, "for topic", topic.Name)
-						atomicErr.Append(err)
+						gErr := &apierror.APIError{}
+						if !errors.As(err, &gErr) || gErr.GRPCStatus().Code() != codes.AlreadyExists {
+							// error isn't an api error or if it is, the code isn't AlreadyExists
+							log.Println("error creating topic", err)
+							atomicErr.Append(err)
+						}
+						log.Printf("subscription %s already exists", subscription)
 						continue
 					}
 					log.Println("created subscription", sub.String(), "for topic", topic.Name)
