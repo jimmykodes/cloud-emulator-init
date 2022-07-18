@@ -1,0 +1,11 @@
+aws:
+  emulatorUrl: "http://sqs:4566"
+  sqs:
+    - message-queue
+gcp:
+  project: test-project
+  pubsub:
+    - name: topic1
+      subscriptions:
+        - topic1sub
+        - topic2sub

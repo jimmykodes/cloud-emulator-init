@@ -1,0 +1,22 @@
+version: '3'
+services:
+  sqs:
+    image: localstack/localstack
+    ports:
+      - "4566:4566"
+  pubsub:
+    image: google/cloud-sdk
+    command: "gcloud beta emulators pubsub start --host-port 0.0.0.0:8085 --log-http --verbosity debug --user-output-enabled"
+    ports:
+      - "8085:8085"
+  init:
+    build: .
+    volumes:
+      - ./init.yaml:/etc/cloud-emulator-init/init.yaml
+    environment:
+      PUBSUB_EMULATOR_HOST: pubsub:8085
+      CONFIG_FILE: /etc/cloud-emulator-init/init.yaml
+    restart: on-failure
+    depends_on:
+      - sqs
+      - pubsub
