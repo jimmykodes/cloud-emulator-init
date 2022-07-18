@@ -16,6 +16,7 @@ import (
 
 type Config struct {
 	EmulatorURL string   `yaml:"emulatorUrl"`
+	Region      string   `yaml:"region"`
 	SqsQueues   []string `yaml:"sqs"`
 }
 
@@ -27,9 +28,12 @@ func RunE(ctx context.Context, config *Config) error {
 	if config.EmulatorURL == "" {
 		return fmt.Errorf("missing aws emulator url")
 	}
+	if config.Region == "" {
+		return fmt.Errorf("missing aws region")
+	}
 	sess, err := session.NewSession(&aws.Config{
 		Credentials: credentials.NewStaticCredentials("test", "test", "test"),
-		Region:      aws.String("any-region"),
+		Region:      &config.Region,
 		Endpoint:    &config.EmulatorURL,
 	})
 	if err != nil {

@@ -63,6 +63,7 @@ Resources are defined in a yaml file (default `conf.yaml`).
 ```yaml
 aws:
   emulatorUrl: "http://localhost:4566"
+  region: test-region
   sqs:
     - my-queue
     - my-other-queue
